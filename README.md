@@ -4,27 +4,46 @@
 [![rank](https://make.fun/badge/news-image-20261117/visible-night/makefun-news-image-20261117/rank.svg)](https://make.fun/bounty/news-image-20261117)
 [![reward](https://make.fun/badge/news-image-20261117/visible-night/makefun-news-image-20261117/reward.svg)](https://make.fun/bounty/news-image-20261117)
 
-One image summing up the world news of Tuesday 17 November 2026, built for the
-[make.fun](https://make.fun/bounty/news-image-20261117) news-image bounty.
+An entry for the make.fun `news-image-20261117` competition: one image that
+sums up the world's news of Tuesday 17 November 2026.
 
-## What it shows
+## The design
 
-Lead story: Ukraine strikes the Kerch Bridge — part of the road span to Crimea
-falls into the strait. Plus six more of the day's most consequential stories
-across regions and fields: the US–Iran exchange over Qeshm Island and Bahrain,
-Trump's Asia trip opening in Manila, new US chip-export limits hitting Malaysia,
-Indonesia and Thailand, the US losing measles elimination status after 26 years,
-Japan scrambling jets over a Russian airspace violation, and five EU states
-planning a Rwanda return hub.
+Version 2 rebuilds the entry as a technical drawing — "The Blueprint". A deep
+blueprint-blue field carries a giant numeral date, the Kerch Bridge drawn as
+an engineering elevation with its broken span, and six stories as white
+annotation sheets pinned asymmetrically, each with a numbered rank chip and a
+blueprint-line icon. Eight visual directions were explored before this one
+was chosen; see `render/concepts.md`.
 
-## How it was made
+## What the image shows
 
-The image is a typeset graphic, not an AI-generated picture: the layout is
-self-contained HTML/CSS in `render/news.html` (Noto Sans, real typography),
-rendered once to `entry.png` (1024×1024) with headless Chromium — see
-`render/render.sh`. The entry program `main.ts` (Node 22, standard library
-only) copies `entry.png` to the output directory; running it twice produces
-byte-identical output.
+Six stories, ranked by consequence, across four regions and five fields:
 
-All labels were checked against the day's reporting; the image names its day in
-the masthead and the footer.
+1. **Ukraine strikes Kerch Bridge** — Crimea road span falls into the strait;
+   Kyiv calls it "unprecedented".
+2. **US and Iran trade blows** — US jets hit Qeshm; Iran drones hit Bahrain
+   radar.
+3. **Trump opens Asia trip** — ASEAN opens in Manila; Xi and Putin due
+   Thursday.
+4. **Nvidia chip crackdown widens** — new US limits hit Malaysia, Indonesia,
+   Thailand.
+5. **US loses measles-free status** — ends after 26 years: 5,400 cases,
+   10 deaths.
+6. **EU plans Rwanda return hub** — five states to send rejected asylum
+   seekers to Rwanda.
+
+Every label was checked against the day's reporting (BBC, Foreign Exchanges,
+All Voices News). No hype, no speculation presented as fact.
+
+## How it is built
+
+The image is a typeset graphic, not an AI-generated picture: real text and
+inline SVG line art in a self-contained HTML/CSS layout (`render/news.html`),
+rendered once to PNG with headless Chromium (`render/render.sh`). The entry
+program (`main.ts`, Node standard library only) copies `entry.png` to the
+output directory, so both grader runs produce byte-identical output.
+
+- Image: 1024 x 1024 px, under 1 MiB.
+- Type stays legible at 300 px wide: nothing below 26 px, no sentence
+  below 34 px.

@@ -1,20 +1,25 @@
-#!/bin/bash
-# Render render/news.html to entry.png at exactly 1024x1024 with headless Chromium.
-# NOTE: a --window-size=1024,1024 screenshot silently drops the bottom ~46px
-# of the page in this Chromium build, so render tall (1200px) and crop to the
-# top 1024x1024 with PIL. Layout positions are identical either way.
-set -e
+#!/usr/bin/env bash
+# Render the news image from render/news.html to entry.png.
+#
+# QUIRK: Chromium's --screenshot at --window-size=1024,1024 silently drops
+# the bottom ~46-90px of the page. Work around it by shooting at 1024x1200
+# and cropping the top 1024 rows with PIL. Always use this script to
+# re-render; never screenshot at 1024x1024 directly.
+set -euo pipefail
 DIR="$(cd "$(dirname "$0")/.." && pwd)"
-CHROME="$HOME/.cache/ms-playwright/chromium-1187/chrome-linux/chrome"
-"$CHROME" --headless=new --no-sandbox --disable-gpu --hide-scrollbars \
-  --force-device-scale-factor=1 --window-size=1024,1200 \
-  --screenshot="$DIR/.tall.png" "file://$DIR/render/news.html" 2>/dev/null
-python3 -c "
+CHROME="${CHROME:-$HOME/.cache/ms-playwright/chromium-1187/chrome-linux/chrome}"
+"$CHROME" --headless --disable-gpu --no-sandbox --hide-scrollbars \
+  --force-device-scale-factor=1 \
+  --window-size=1024,1200 \
+  --screenshot="$DIR/.shot-tall.png" \
+  "file://$DIR/render/news.html"
+python3 - "$DIR" <<'PYEOF'
+import sys
 from PIL import Image
-im = Image.open('$DIR/.tall.png')
-im.crop((0, 0, 1024, 1024)).save('$DIR/entry.png')
-im2 = Image.open('$DIR/entry.png')
-print('entry.png:', im2.size, im2.mode)
-"
-rm -f "$DIR/.tall.png"
-stat -c 'bytes: %s' "$DIR/entry.png"
+d = sys.argv[1]
+im = Image.open(f"{d}/.shot-tall.png")
+im.crop((0, 0, 1024, 1024)).save(f"{d}/entry.png", optimize=True)
+out = Image.open(f"{d}/entry.png")
+print("entry.png:", out.size, out.format)
+PYEOF
+rm -f "$DIR/.shot-tall.png"
