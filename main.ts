@@ -1,13 +1,11 @@
-// Entry program for the news-image bounty. The picture itself is produced
-// at build time from render/news.html, so at grading time this program has
-// one job: place an exact copy of entry.png where the grader expects it.
-// Copying bytes is deterministic, which is what the two grading runs need.
+// Entry program for news-image-20261117 (v3): writes the finished image to
+// the output directory. The image is rendered at build time and committed to
+// this repo, so both grader runs copy the same bytes.
 import { copyFileSync, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const root = dirname(fileURLToPath(import.meta.url));
-const target = process.env.MAKEFUN_OUTPUT_DIR ?? "/output";
-
-mkdirSync(target, { recursive: true });
-copyFileSync(join(root, "entry.png"), join(target, "entry.png"));
+const here = dirname(fileURLToPath(import.meta.url));
+const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? "/output";
+mkdirSync(outDir, { recursive: true });
+copyFileSync(join(here, "entry.png"), join(outDir, "entry.png"));
